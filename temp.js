@@ -7,6 +7,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(3000);
 
+var interval = 3000;
 app.listen(8080);
 
 app.get('/', function (req, res) {
@@ -14,12 +15,21 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  sensor.getAll(function (err, tempObj){
-    socket.emit ( 'news', tempObj);
+
+  sensor.get('28-0415904c2bff',function (err, temp){
+    socket.emit ( 'temperatura', temp);
+    console.log(temp);
   });
+ 
+  setInterval(function(){
+    sensor.get('28-0415904c2bff', function (err, temp){
+      //console.log('intervalo');
+      //console.log(temp);
+      socket.emit ('temperatura',temp);
+    });
+
+
+  }, interval);
   
- // socket.emit('news', { hello: 'world' });
- // socket.on('my other event', function (data) {
- //   console.log(data);
- // });
+
 });
