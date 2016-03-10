@@ -1,0 +1,9 @@
+{
+  "name": "temperatura",
+  "version": "0.1",
+  "author": "Glloret",
+  "dependencies":{
+	"ds18x20":"0.2.0"
+   }
+  
+}
