@@ -14,22 +14,36 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function (socket) {
 
+app.get('/templogger', function (req, res){
+
+res.sendFile(__dirname + '/logger.html');
+
+});
+
+
+
+
+io.on('connection', function (socket) {
   sensor.get('28-0415904c2bff',function (err, temp){
     socket.emit ( 'temperatura', temp);
-    console.log(temp);
+    //console.log(temp);
   });
- 
-  setInterval(function(){
+   setInterval(function(){
     sensor.get('28-0415904c2bff', function (err, temp){
       //console.log('intervalo');
       //console.log(temp);
       socket.emit ('temperatura',temp);
     });
-
-
   }, interval);
-  
+  socket.on('gettemp', function(data){
+    sensor.get('28-0415904c2bff', function (err, temp){
+      //console.log('intervalo');
+      //console.log(temp);
+      socket.emit ('templog',temp);
+    });
+
+  });
+
 
 });

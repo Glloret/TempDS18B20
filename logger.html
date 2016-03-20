@@ -1,0 +1,59 @@
+<html>
+<head>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<style>
+#tempDisplay {
+background: orange;
+width: 280px;
+height: 100px;
+font-family: sans-serif;
+font-size: 60px;
+color:white;
+line-height: 100px;
+text-align: center;
+border-radius: 30px;
+font-weight: bold;
+box-shadow: 5px 5px 3px gray;
+}
+#log {
+height: 200px;
+width: 100px;
+overflow-y:auto;
+border:1px solid gray;
+border-radius 5 px;
+
+
+}
+</style>
+
+
+</head>
+<body>
+<script>
+  var socket = io.connect('192.168.1.120:3000');
+  //var socket = io.connect('10.9.50.58:3000');
+  socket.on('temperatura', function (data) {
+    //console.log(data + " ºC" );
+    $('#tempDisplay').html(data + " ºC");
+    //socket.emit('my other event', { my: 'data' });
+  });
+  socket.on('templog',function(data){
+    console.log(data);
+    var logDiv =$('#log');
+    logDiv.append('1, '+ data + '<br>');
+    logDiv.animate({ scrollTop: logDiv.prop("scrollHeight") - logDiv.height() }, 1000);
+    //console.log(logDiv.height() + '  ' + logDiv.prop("scrollHeight"));
+  });
+
+  setInterval(function(){
+    socket.emit('gettemp',{timestamp: 1});
+
+  }, 2000);
+
+
+</script>
+<div id="tempDisplay"> </div>
+<div id="log"></div>
+</body>
+</html>

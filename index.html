@@ -23,8 +23,8 @@ box-shadow: 5px 5px 3px gray;
 </head>
 <body>
 <script>
-//  var socket = io.connect('192.168.1.120:3000');
-  var socket = io.connect('10.9.50.58:3000');
+  var socket = io.connect('192.168.1.120:3000');
+  //var socket = io.connect('10.9.50.58:3000');
   socket.on('temperatura', function (data) {
     console.log(data + " ºC" );
     $('#tempDisplay').html(data + " ºC");
@@ -34,4 +34,3 @@ box-shadow: 5px 5px 3px gray;
 <div id="tempDisplay"> </div>
 </body>
 </html>
-
