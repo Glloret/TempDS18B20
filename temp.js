@@ -10,6 +10,9 @@ var io = require('socket.io').listen(3000);
 var interval = 3000;
 app.listen(8080);
 
+
+app.use(express.static('public'));
+
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
