@@ -1,3 +1,5 @@
+
+///////////// GET LOCAL IP //////////////////////////////////////
 var os = require('os');
 var ifaces = os.networkInterfaces();
 var localIP;
@@ -24,13 +26,17 @@ Object.keys(ifaces).forEach(function (ifname) {
   });
 });
 
-
+/////////////////////////////////////////////////////////////
 
 var sensor = require('ds18x20')
 
-sensor.getAll(function (err, tempObj) {
-    console.log(tempObj);
-});
+//sensor.getAll(function (err, tempObj) {
+//    console.log(tempObj);
+//});
+
+
+
+
 var express = require('express');
 var socketPort = 3000;
 
@@ -42,42 +48,51 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 var server = require('http').Server(app);
 
-var interval = 3000;
+var interval = 3000; // Interval to update the thermometer socket send
 app.listen(8080);
 
 
 
-// TERMOMETRO
+// TERMOMETRO (Will receive socket information from the server
+
+// With static html
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 var socketServer=  localIP + ":" + socketPort;
+
+
+// with Jade generated HTML
 app.get('/jade', function (req, res) {
-  res.render('thermometer', { title: 'Hey', message: socketServer});
+  res.render('thermometer', { message: socketServer});
 });
 
 // TEMPERATURE LOGGER
 app.get('/templogger', function (req, res){
-
-res.sendFile(__dirname + '/logger.html');
-
+  res.sendFile(__dirname + '/logger.html');
 });
 
 
-
+// Socket.io server functions
 
 io.on('connection', function (socket) {
-  sensor.get('28-0415904c2bff',function (err, temp){
-    socket.emit ( 'temperatura', temp);
+//  sensor.get('28-0415904c2bff',function (err, temp){
+//    socket.emit ( 'temperatura', temp);
     //console.log(temp);
-  });
-   setInterval(function(){
+//  });
+ 
+
+// Send temperature every intervalo through socket connection (Therometer)
+  setInterval(function(){
     sensor.get('28-0415904c2bff', function (err, temp){
       //console.log('intervalo');
       //console.log(temp);
       socket.emit ('temperatura',temp);
     });
   }, interval);
+
+
+/// Send temp on socket request (Logger)
   socket.on('gettemp', function(data){
     sensor.get('28-0415904c2bff', function (err, temp){
       //console.log('intervalo');
