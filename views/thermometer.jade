@@ -1,0 +1,18 @@
+html
+  head
+    title Termómetro
+    script(src='/libs/socket.io-1.4.5.js')
+    script(src='/libs/jquery.min.js')
+    link(href='/styles/thermo.css', rel='stylesheet')
+    
+
+  body
+    script.
+      mens="#{message}"
+      console.log(mens);
+      var socket = io.connect(mens);
+      socket.on('temperatura', function (data) {
+        $('#tempDisplay').html(data + " ºC");
+      });
+    #tempDisplay
+    
