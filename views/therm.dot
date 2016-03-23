@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="/libs/socket.io-1.4.5.js"></script>
+    <script src="/libs/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/styles/thermo.css">
+  </head>
+  <body>
+  <script>
+    var socket = io.connect('[[= model.fromServer ]]');
+    socket.on('temperatura', function (data) {
+      $('#tempDisplay').html(data + " ºC");
+    });
+  </script>
+  <div id="tempDisplay"> </div>
+  </body>
+</html>

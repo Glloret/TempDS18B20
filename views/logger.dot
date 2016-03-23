@@ -2,39 +2,13 @@
 <head>
   <script src="/libs/socket.io-1.4.5.js"></script>
   <script src="/libs/jquery.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-<style>
-#tempDisplay {
-background: orange;
-width: 280px;
-height: 100px;
-font-family: sans-serif;
-font-size: 60px;
-color:white;
-line-height: 100px;
-text-align: center;
-border-radius: 30px;
-font-weight: bold;
-box-shadow: 5px 5px 3px gray;
-}
-#log {
-height: 200px;
-width: 100px;
-overflow-y:auto;
-border:1px solid gray;
-border-radius 5 px;
-
-
-}
-</style>
-
-
+  <script src="/libs/plotly-latest.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/styles/logger.css">
 </head>
 <body>
   <div id="myDiv" style="width: 480px; height: 400px;"></div>
 <script>
-  var socket = io.connect('192.168.1.120:3000');
+  var socket = io.connect('[[= model.fromServer ]]');
   //var socket = io.connect('10.9.50.58:3000');
   socket.on('temperatura', function (data) {
     //console.log(data + " ºC" );

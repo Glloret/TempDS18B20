@@ -25,7 +25,6 @@ Object.keys(ifaces).forEach(function (ifname) {
     ++alias;
   });
 });
-
 /////////////////////////////////////////////////////////////
 
 var sensor = require('ds18x20')
@@ -35,23 +34,22 @@ var sensor = require('ds18x20')
 //});
 
 
-
-
 var express = require('express');
+var engine = require('express-dot-engine');
+
 var socketPort = 3000;
 
 var io = require('socket.io').listen(socketPort);
 var path = require('path');
 var app= express();
+app.engine('dot', engine.__express);
 app.use(express.static('public'));
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'dot');
 var server = require('http').Server(app);
 
 var interval = 3000; // Interval to update the thermometer socket send
 app.listen(8080);
-
-
 
 // TERMOMETRO (Will receive socket information from the server
 
@@ -60,16 +58,14 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 var socketServer=  localIP + ":" + socketPort;
-
-
-// with Jade generated HTML
-app.get('/jade', function (req, res) {
-  res.render('thermometer', { message: socketServer});
+app.get('/dot', function(req, res){
+  res.render('therm', { fromServer: socketServer });
 });
 
 // TEMPERATURE LOGGER
 app.get('/templogger', function (req, res){
-  res.sendFile(__dirname + '/logger.html');
+  //res.sendFile(__dirname + '/logger.html');
+  res.render('logger', { fromServer: socketServer });
 });
 
 
@@ -80,7 +76,7 @@ io.on('connection', function (socket) {
 //    socket.emit ( 'temperatura', temp);
     //console.log(temp);
 //  });
- 
+
 
 // Send temperature every intervalo through socket connection (Therometer)
   setInterval(function(){
